@@ -1,0 +1,51 @@
+<div class="craftsman-page">
+  <header class="topbar">
+    <div class="container app-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/home" class="brand d-flex align-items-center gap-2 text-decoration-none">
+        <span class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-hammer"></i></span>
+        <span class="brand-name">CraftConnect</span>
+      </a>
+      <nav class="craftsman-nav d-flex align-items-center gap-2" aria-label="Craftsman navigation">
+        <a routerLink="/craftsman/requests" class="nav-link rounded-pill px-3 py-2">
+          <i class="bi bi-inbox me-1"></i>Requests
+        </a>
+        <a routerLink="/craftsman/board" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-grid-1x2 me-1"></i>Board</a>
+        <a routerLink="/craftsman/day-sheet" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-calendar3 me-1"></i>Day sheet</a>
+        <a routerLink="/craftsman/notifications" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-bell me-1"></i>Notifications</a>
+      </nav>
+      <span class="user-pill rounded-pill px-3 py-2"><i class="bi bi-person-circle me-2"></i>Craftsman</span>
+    </div>
+  </header>
+
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="hero-card rounded-4 p-4 p-lg-5 mb-4">
+      <p class="eyebrow mb-2">Your specialties</p>
+      <h1 class="page-title mb-2">Crafts you work in</h1>
+      <p class="text-muted mb-0">Choose the services customers can request from you.</p>
+    </section>
+
+    <div *ngIf="loading()" class="state loading" role="status">Loading crafts...</div>
+    <div *ngIf="!loading() && errorMessage()" class="state error" role="alert">{{ errorMessage() }}</div>
+
+    <section *ngIf="!loading() && !errorMessage()" class="panel-card rounded-4 p-4">
+      <div *ngIf="status() !== 'Approved'" class="state notice mb-4">
+        Craft editing is unavailable while your account is {{ status()?.toLowerCase() }}. An administrator must approve your account first.
+      </div>
+
+      <div *ngIf="crafts().length === 0" class="state empty">No crafts are available yet.</div>
+      <div *ngIf="crafts().length > 0" class="craft-list">
+        <article *ngFor="let craft of crafts()" class="craft-card rounded-4 p-3 d-flex align-items-center justify-content-between gap-3">
+          <div>
+            <h2 class="craft-title mb-1">{{ craft.name }}</h2>
+            <p class="craft-description mb-0">{{ craft.description || 'No description provided.' }}</p>
+          </div>
+          <button type="button" class="btn" [class.btn-primary]="!craft.selected" [class.btn-outline-danger]="craft.selected"
+            [disabled]="status() !== 'Approved' || actionId() === craft.id" (click)="changeSelection(craft)">
+            <span *ngIf="actionId() !== craft.id"><i class="bi" [class.bi-check2]="craft.selected" [class.bi-plus-lg]="!craft.selected"></i> {{ craft.selected ? 'Remove' : 'Select' }}</span>
+            <span *ngIf="actionId() === craft.id">Updating...</span>
+          </button>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>

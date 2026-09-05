@@ -1,0 +1,16 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <aside class="auth-branding"><a class="brand-mark" routerLink="/"><i class="bi bi-tools"></i><span>Craft<span>Connect</span></span></a><div class="branding-copy"><p class="eyebrow">Make it yours</p><h1>Find the right hands for the job.</h1><p>Connect with skilled professionals for repairs, renovations, and home services you can rely on.</p></div><div class="feature-pill"><i class="bi bi-stars"></i><span><strong>Trusted local talent</strong><small>Professional service matching without the stress.</small></span></div></aside>
+    <section class="auth-panel"><div class="auth-content"><p class="eyebrow">Create your account</p><h2>Join CraftConnect</h2><p class="auth-subtitle">A simpler way to start your next project.</p>
+      <form (ngSubmit)="submit()" novalidate>
+        <div class="form-field"><label for="signup-name" class="form-label">Full name</label><input id="signup-name" name="name" type="text" class="form-control form-control-lg" placeholder="Your full name" [(ngModel)]="form.name" /></div>
+        <div class="form-field"><label for="signup-email" class="form-label">Email address</label><input id="signup-email" name="email" type="email" class="form-control form-control-lg" placeholder="you@example.com" [(ngModel)]="form.email" /></div>
+        <div class="form-field"><label for="signup-password" class="form-label">Password</label><input id="signup-password" name="password" type="password" class="form-control form-control-lg" placeholder="At least 8 characters" [(ngModel)]="form.password" /></div>
+        <div class="form-field"><label for="signup-role" class="form-label">I am a</label><select id="signup-role" name="role" class="form-select form-select-lg" [(ngModel)]="form.role"><option value="Customer">Customer</option><option value="Craftsman">Craftsman</option></select></div>
+        <button type="submit" class="btn btn-primary btn-lg w-100" [disabled]="submitting()"><span *ngIf="!submitting()">Create account <i class="bi bi-arrow-right"></i></span><span *ngIf="submitting()">Creating account...</span></button>
+      </form>
+      <div *ngIf="formError()" class="alert alert-danger" role="alert">{{ formError() }}</div><div *ngIf="successMessage()" class="alert alert-success" role="alert">{{ successMessage() }}</div>
+      <p class="auth-switch">Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div></section>
+  </div>
+</div>

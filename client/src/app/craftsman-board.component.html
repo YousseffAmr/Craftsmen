@@ -1,0 +1,32 @@
+<div class="craftsman-page">
+  <header class="topbar">
+    <div class="container app-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/home" class="brand d-flex align-items-center gap-2 text-decoration-none"><span class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-hammer"></i></span><span class="brand-name">CraftConnect</span></a>
+      <nav class="craftsman-nav d-flex align-items-center gap-2" aria-label="Craftsman navigation">
+        <a routerLink="/craftsman/requests" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-inbox me-1"></i>Requests</a>
+        <a routerLink="/craftsman/board" class="nav-link active rounded-pill px-3 py-2"><i class="bi bi-grid-1x2 me-1"></i>Board</a>
+        <a routerLink="/craftsman/day-sheet" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-calendar3 me-1"></i>Day sheet</a>
+        <a routerLink="/craftsman/notifications" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-bell me-1"></i>Notifications</a>
+      </nav>
+      <span class="user-pill rounded-pill px-3 py-2"><i class="bi bi-person-circle me-2"></i>Craftsman</span>
+    </div>
+  </header>
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="hero-card rounded-4 p-4 p-lg-5 mb-4"><p class="eyebrow mb-2">Your workload</p><h1 class="page-title mb-2">Request board</h1><p class="text-muted mb-0">A live summary of every request currently connected to your work.</p></section>
+    <div *ngIf="loading()" class="state loading" role="status">Loading board...</div>
+    <div *ngIf="!loading() && errorMessage()" class="state error" role="alert">{{ errorMessage() }}</div>
+    <ng-container *ngIf="!loading() && !errorMessage()">
+      <section class="totals-grid mb-4" aria-label="Request totals">
+        <div class="total-card rounded-4 p-4"><span class="meta-label">All requests</span><strong>{{ requestCount() }}</strong></div>
+        <div class="total-card rounded-4 p-4"><span class="meta-label">Total offered value</span><strong>{{ totalValue() | number:'1.2-2' }}</strong></div>
+      </section>
+      <div *ngIf="groups().length === 0 || requestCount() === 0" class="state empty">No requests to summarize yet.</div>
+      <section *ngIf="requestCount() > 0" class="group-grid" aria-label="Requests grouped by status">
+        <article *ngFor="let group of groups()" class="group-card rounded-4 p-4" [class.is-empty]="group.count === 0">
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-3"><h2 class="group-title mb-0">{{ group.status }}</h2><span class="count-badge rounded-pill">{{ group.count }}</span></div>
+          <p class="group-caption mb-2">{{ group.count === 1 ? 'request' : 'requests' }}</p><strong class="group-total">{{ group.total | number:'1.2-2' }}</strong><span class="text-muted d-block">offered value</span>
+        </article>
+      </section>
+    </ng-container>
+  </main>
+</div>

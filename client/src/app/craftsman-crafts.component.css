@@ -1,0 +1,26 @@
+:host { display: block; min-height: 100vh; background: #f4f5f7; color: var(--brand-navy); }
+.craftsman-page { min-height: 100vh; }
+.topbar { background: rgba(255,255,255,.82); border-bottom: 1px solid var(--brand-border); position: sticky; top: 0; z-index: 10; }
+.app-shell { max-width: 1200px; }
+.brand { color: var(--brand-navy); }
+.brand-badge { width: 38px; height: 38px; background: linear-gradient(135deg, var(--brand-amber), #eb9a1f); color: #fff; }
+.brand-name { font-size: 1.3rem; font-weight: 800; letter-spacing: -.04em; }
+.user-pill { background: var(--brand-slate); border: 1px solid var(--brand-border); font-weight: 600; }
+.craftsman-nav .nav-link { color: var(--brand-navy); font-weight: 700; text-decoration: none; transition: background-color .2s ease, color .2s ease; }
+.craftsman-nav .nav-link:hover, .craftsman-nav .nav-link:focus-visible { background: var(--brand-sand); color: var(--brand-navy); }
+.craftsman-nav .nav-link i { color: var(--brand-amber); }
+.hero-card, .panel-card { background: rgba(255,255,255,.9); border: 1px solid var(--brand-border); box-shadow: 0 12px 30px rgba(20,33,61,.06); }
+.hero-card { background: linear-gradient(135deg, #fff, #fffaf3); }
+.eyebrow { color: var(--brand-amber); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.page-title { color: var(--brand-navy); font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 800; letter-spacing: -.06em; }
+.state { border-radius: .9rem; padding: 1rem 1.1rem; }
+.loading { background: #fffaf3; color: var(--brand-muted); }
+.error { background: var(--brand-danger-soft); border: 1px solid #fecaca; color: #991b1b; }
+.notice { background: #fff8e8; border: 1px solid #f5d28a; color: #79500b; }
+.empty { background: #f8fafc; border: 1px solid var(--brand-border); color: var(--brand-muted); text-align: center; }
+.craft-list { display: grid; gap: 1rem; }
+.craft-card { border: 1px solid var(--brand-border); background: linear-gradient(180deg, #fff, #fbfbfc); }
+.craft-title { color: var(--brand-navy); font-size: 1.08rem; font-weight: 700; }
+.craft-description { color: var(--brand-muted); }
+.btn { min-width: 110px; border-radius: .8rem; font-weight: 700; }
+@media (max-width: 575.98px) { .user-pill { display: none; } .craftsman-nav .nav-link { padding-inline: .65rem !important; } .craft-card { align-items: flex-start !important; flex-direction: column; } .btn { width: 100%; } }

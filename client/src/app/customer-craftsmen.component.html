@@ -1,0 +1,58 @@
+<div class="customer-page">
+  <header class="topbar">
+    <div class="container app-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/home" class="brand d-flex align-items-center gap-2 text-decoration-none">
+        <span class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-hammer"></i></span>
+        <span class="brand-name">CraftConnect</span>
+      </a>
+      <nav class="customer-nav d-flex align-items-center gap-2" aria-label="Customer navigation"><a routerLink="/customer/requests" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-inbox me-1"></i>Requests</a><a routerLink="/customer/notifications" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-bell me-1"></i>Notifications</a><a routerLink="/customer/profile" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-person me-1"></i>Profile</a></nav>
+      <span class="user-pill rounded-pill px-3 py-2"><i class="bi bi-person-circle me-2"></i>Customer</span>
+    </div>
+  </header>
+
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="hero-card rounded-4 p-4 p-lg-5 mb-4">
+      <p class="eyebrow mb-2">Find your specialist</p>
+      <h1 class="page-title mb-2">Browse craftsmen</h1>
+      <p class="text-muted mb-0">Choose a craft to see approved professionals who offer it.</p>
+    </section>
+
+    <div *ngIf="loading()" class="state loading" role="status">Loading crafts...</div>
+    <div *ngIf="!loading() && errorMessage() && crafts().length === 0" class="state error" role="alert">{{ errorMessage() }}</div>
+    <div *ngIf="!loading() && !errorMessage() && crafts().length === 0" class="state empty">No crafts are available yet.</div>
+
+    <div *ngIf="!loading() && crafts().length > 0" class="row g-4">
+      <div class="col-lg-4">
+        <section class="panel-card rounded-4 p-4">
+          <p class="eyebrow mb-1">Service type</p>
+          <h2 class="section-title mb-3">Select a craft</h2>
+          <div class="craft-options">
+            <button *ngFor="let craft of crafts()" type="button" class="craft-option text-start"
+              [class.active]="selectedCraftId() === craft.id" (click)="selectCraft(craft.id)">
+              <strong>{{ craft.name }}</strong>
+              <small>{{ craft.description || 'Professional service' }}</small>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-8">
+        <section class="panel-card rounded-4 p-4 h-100">
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+            <div><p class="eyebrow mb-1">Approved professionals</p><h2 class="section-title mb-0">Available craftsmen</h2></div>
+            <span class="count-badge rounded-pill px-2 py-1">{{ craftsmen().length }} found</span>
+          </div>
+          <div *ngIf="craftsmenLoading()" class="state loading">Loading craftsmen...</div>
+          <div *ngIf="!craftsmenLoading() && errorMessage()" class="state error" role="alert">{{ errorMessage() }}</div>
+          <div *ngIf="!craftsmenLoading() && !errorMessage() && craftsmen().length === 0" class="state empty">No approved craftsmen offer this craft yet.</div>
+          <div *ngIf="!craftsmenLoading() && !errorMessage() && craftsmen().length > 0" class="craftsman-list">
+            <article *ngFor="let craftsman of craftsmen()" class="craftsman-card rounded-4 p-3 d-flex align-items-center justify-content-between gap-3">
+              <div><h3 class="craftsman-name mb-1">{{ craftsman.name }}</h3><span class="text-muted">Approved CraftConnect professional</span></div>
+              <a class="btn btn-primary" [routerLink]="['/customer/craftsmen', craftsman.id, 'request']" [queryParams]="{ craftId: selectedCraftId() }">Request Service</a>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>

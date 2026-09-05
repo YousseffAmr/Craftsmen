@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --brand-navy: #14213d;
+  --brand-navy-soft: #1d2d50;
+  --brand-amber: #f59e0b;
+  --brand-amber-soft: #f8d38a;
+  --brand-sand: #f6efe8;
+  --brand-slate: #f3f4f6;
+  --brand-muted: #5f6c7b;
+  --brand-border: #e5e7eb;
+  --brand-success: #0f766e;
+  --brand-danger: #dc2626;
+  --brand-danger-soft: #fef2f2;
+  --app-background: #f4f5f7;
+  --app-surface: #ffffff;
+  --app-text: #14213d;
+  --app-muted: #5f6c7b;
+  --app-border: #e5e7eb;
+}
+
+:root[data-theme='dark'] {
+  --brand-navy: #f4f7fb;
+  --brand-navy-soft: #dbe5f2;
+  --brand-slate: #202b3b;
+  --brand-muted: #aebdce;
+  --brand-border: #3b4a5e;
+  --app-background: #101820;
+  --app-surface: #182331;
+  --app-text: #f4f7fb;
+  --app-muted: #aebdce;
+  --app-border: #3b4a5e;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--app-background);
+  color: var(--app-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus {
+  box-shadow: none;
+}
+
+.btn {
+  border-radius: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+  outline: 3px solid rgba(245, 158, 11, 0.25);
+  outline-offset: 2px;
+}
+
+.text-muted {
+  color: var(--brand-muted) !important;
+}
+
+.alert {
+  border-radius: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.state.loading::before {
+  content: '';
+  display: inline-block;
+  width: .9rem;
+  height: .9rem;
+  margin-right: .55rem;
+  vertical-align: -.1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: craftconnect-spin .7s linear infinite;
+}
+
+@keyframes craftconnect-spin {
+  to { transform: rotate(360deg); }
+}
+
+:root[data-theme='dark'] .auth-panel,
+:root[data-theme='dark'] .auth-card,
+:root[data-theme='dark'] .panel,
+:root[data-theme='dark'] .card,
+:root[data-theme='dark'] .modal-content {
+  background: var(--app-surface);
+  color: var(--app-text);
+}
+
+:root[data-theme='dark'] .form-control,
+:root[data-theme='dark'] .form-select,
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] textarea {
+  background: #202d3d;
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+:root[data-theme='dark'] .text-muted,
+:root[data-theme='dark'] .muted {
+  color: var(--app-muted) !important;
+}
+
+:root[data-theme='dark'] {
+  --bs-body-bg: var(--app-background);
+  --bs-body-color: var(--app-text);
+  --bs-secondary-color: var(--app-muted);
+  --bs-border-color: var(--app-border);
+  --bs-tertiary-bg: #202d3d;
+}
+
+:root[data-theme='dark'] app-craft-admin,
+:root[data-theme='dark'] app-craftsman-admin,
+:root[data-theme='dark'] app-craftsman-crafts,
+:root[data-theme='dark'] app-craftsman-requests,
+:root[data-theme='dark'] app-customer-craftsmen,
+:root[data-theme='dark'] app-customer-request {
+  background: var(--app-background) !important;
+  color: var(--app-text) !important;
+}
+
+:root[data-theme='dark'] .topbar,
+:root[data-theme='dark'] .auth-panel,
+:root[data-theme='dark'] .auth-card,
+:root[data-theme='dark'] .page-shell,
+:root[data-theme='dark'] .hero-card,
+:root[data-theme='dark'] .panel-card,
+:root[data-theme='dark'] .request-card,
+:root[data-theme='dark'] .craft-card,
+:root[data-theme='dark'] .craftsman-card {
+  background: var(--app-surface) !important;
+  color: var(--app-text) !important;
+}
+
+:root[data-theme='dark'] .hero-card {
+  background: linear-gradient(135deg, #1d2a39, #273446) !important;
+}
+
+:root[data-theme='dark'] .craft-option,
+:root[data-theme='dark'] .form-control,
+:root[data-theme='dark'] .form-select,
+:root[data-theme='dark'] .page-shell input,
+:root[data-theme='dark'] .page-shell textarea {
+  background: #202d3d !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+:root[data-theme='dark'] .craft-option.active,
+:root[data-theme='dark'] .loading,
+:root[data-theme='dark'] .loading-state,
+:root[data-theme='dark'] .notice,
+:root[data-theme='dark'] .empty,
+:root[data-theme='dark'] .empty-state {
+  background: #263548 !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+:root[data-theme='dark'] .error {
+  background: #44252b !important;
+  border-color: #9b4b54 !important;
+  color: #ffd7da !important;
+}
+
+:root[data-theme='dark'] .success {
+  background: #173b38 !important;
+  border-color: #367c72 !important;
+  color: #c7f5ea !important;
+}
+
+:root[data-theme='dark'] .status-badge.pending {
+  background: #4b3b1e !important;
+  color: #ffe1a0 !important;
+}
+
+:root[data-theme='dark'] .status-badge.accepted {
+  background: #173b38 !important;
+  color: #c7f5ea !important;
+}
+
+:root[data-theme='dark'] .status-badge.declined {
+  background: #44252b !important;
+  color: #ffd7da !important;
+}
+
+:root[data-theme='dark'] .form-label,
+:root[data-theme='dark'] .page-title,
+:root[data-theme='dark'] .section-title,
+:root[data-theme='dark'] .craft-title,
+:root[data-theme='dark'] .craftsman-name,
+:root[data-theme='dark'] .request-title,
+:root[data-theme='dark'] .brand,
+:root[data-theme='dark'] .brand-name,
+:root[data-theme='dark'] .craft-option strong {
+  color: var(--app-text) !important;
+}
+
+:root[data-theme='dark'] .btn-secondary {
+  background: #334155;
+  border-color: #475569;
+  color: var(--app-text);
+}
+
+:root[data-theme='dark'] .btn-outline-secondary {
+  color: var(--app-text);
+  border-color: #718096;
+}
+
+:root[data-theme='dark'] .btn-outline-danger {
+  color: #ffb4bb;
+  border-color: #c56b75;
+}
+
+:root[data-theme='dark'] .auth-page {
+  background: #101820 !important;
+}
+
+:root[data-theme='dark'] .auth-panel,
+:root[data-theme='dark'] .auth-card {
+  border-color: var(--app-border) !important;
+}
+

@@ -1,0 +1,59 @@
+﻿<div class="page-shell">
+  <section class="panel form-panel">
+    <h1>Craft admin</h1>
+
+    <form (ngSubmit)="submitCraft()" novalidate>
+      <div class="field-row">
+        <label for="craft-name">Name</label>
+        <input id="craft-name" name="name" type="text" [(ngModel)]="form.name" />
+      </div>
+
+      <div class="field-row">
+        <label for="craft-description">Description</label>
+        <textarea id="craft-description" name="description" rows="4" [(ngModel)]="form.description"></textarea>
+      </div>
+
+      <div class="actions-row">
+        <button type="submit" [disabled]="saving">
+          {{ editingId === null ? 'Create craft' : 'Save changes' }}
+        </button>
+        <button type="button" class="secondary" *ngIf="editingId !== null" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <p class="form-error" *ngIf="formError">{{ formError }}</p>
+  </section>
+
+  <section class="panel list-panel">
+    <h2>Existing crafts</h2>
+
+    <div *ngIf="loading()" class="state loading">Loading crafts…</div>
+    <div *ngIf="!loading() && errorMessage()" class="state error">{{ errorMessage() }}</div>
+    <div *ngIf="!loading() && !errorMessage() && crafts().length === 0" class="state empty">
+      No crafts yet. Add the first one above.
+    </div>
+
+    <ul *ngIf="!loading() && !errorMessage() && crafts().length > 0" class="craft-list">
+      <li *ngFor="let craft of crafts()" class="craft-item">
+        <div class="craft-details">
+          <strong>{{ craft.name }}</strong>
+          <span *ngIf="craft.description; else noDescription">
+            {{ craft.description }}
+          </span>
+          <ng-template #noDescription>
+            <span class="muted">No description provided</span>
+          </ng-template>
+        </div>
+
+        <div class="row-actions">
+          <button type="button" class="secondary" (click)="startEdit(craft)">Edit</button>
+          <button type="button" class="danger" (click)="deleteCraft(craft.id)">Delete</button>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <app-signup></app-signup>
+</div>

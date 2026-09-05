@@ -1,0 +1,77 @@
+<div class="admin-page">
+  <header class="topbar">
+    <div class="container app-shell">
+      <div class="d-flex align-items-center justify-content-between gap-3 py-3">
+        <div class="brand d-flex align-items-center gap-2">
+          <div class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle">
+            <i class="bi bi-hammer"></i>
+          </div>
+          <div class="brand-name">CraftConnect</div>
+        </div>
+        <nav class="main-nav d-none d-md-flex align-items-center gap-4">
+          <a class="nav-link" routerLink="/home">Marketplace</a>
+          <a class="nav-link active" routerLink="/admin/craftsmen">Craftsmen</a>
+          <a class="nav-link" routerLink="/home">Services</a>
+        </nav>
+        <div class="user-pill d-flex align-items-center gap-2 rounded-pill px-3 py-2">
+          <i class="bi bi-person-circle"></i>
+          <span>Admin</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="hero-card rounded-4 p-4 p-lg-5 mb-4">
+      <p class="eyebrow mb-2">Administration</p>
+      <h1 class="page-title mb-1">Craftsman approvals</h1>
+      <p class="text-muted mb-0">Review new professionals before they join the CraftConnect marketplace.</p>
+    </section>
+
+    <section class="panel-card rounded-4 p-4">
+      <div class="section-header d-flex align-items-center justify-content-between mb-3">
+        <div>
+          <p class="eyebrow mb-1">Needs review</p>
+          <h2 class="section-title mb-0">Pending craftsmen</h2>
+        </div>
+        <span class="count-badge rounded-pill px-2 py-1">{{ craftsmen().length }} pending</span>
+      </div>
+
+      <div *ngIf="loading()" class="loading-state d-flex align-items-center justify-content-center gap-3 py-5">
+        <div class="spinner-border text-warning" role="status" aria-label="Loading"></div>
+        <span class="fw-medium">Loading craftsmen...</span>
+      </div>
+
+      <div *ngIf="!loading() && errorMessage()" class="alert alert-danger mb-0" role="alert">
+        {{ errorMessage() }}
+      </div>
+
+      <div *ngIf="!loading() && !errorMessage() && craftsmen().length === 0" class="empty-state text-center py-5">
+        <div class="empty-icon rounded-circle mx-auto mb-3 d-inline-flex align-items-center justify-content-center">
+          <i class="bi bi-person-check"></i>
+        </div>
+        <h3 class="h5 mb-2">All caught up</h3>
+        <p class="text-muted mb-0">There are no pending craftsmen waiting for review.</p>
+      </div>
+
+      <div *ngIf="!loading() && !errorMessage() && craftsmen().length > 0" class="craftsman-list">
+        <div *ngFor="let craftsman of craftsmen()" class="craftsman-card rounded-4 p-3">
+          <div class="craftsman-info">
+            <div class="craftsman-name">{{ craftsman.name }}</div>
+            <div class="craftsman-email">{{ craftsman.email }}</div>
+          </div>
+          <span class="status-badge rounded-pill px-2 py-1">{{ craftsman.status }}</span>
+          <div class="craftsman-actions d-flex gap-2">
+            <button type="button" class="btn btn-primary btn-sm" [disabled]="actionId() !== null" (click)="approve(craftsman)">
+              <span *ngIf="actionId() !== craftsman.id">Approve</span>
+              <span *ngIf="actionId() === craftsman.id">Saving...</span>
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" [disabled]="actionId() !== null" (click)="refuse(craftsman)">
+              Refuse
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,42 @@
+<div class="craftsman-page">
+  <header class="topbar">
+    <div class="container app-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/home" class="brand d-flex align-items-center gap-2 text-decoration-none">
+        <span class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-hammer"></i></span>
+        <span class="brand-name">CraftConnect</span>
+      </a>
+      <nav class="craftsman-nav d-flex align-items-center gap-2" aria-label="Craftsman navigation">
+        <a routerLink="/craftsman/requests" class="nav-link active rounded-pill px-3 py-2"><i class="bi bi-inbox me-1"></i>Requests</a>
+        <a routerLink="/craftsman/board" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-grid-1x2 me-1"></i>Board</a>
+        <a routerLink="/craftsman/day-sheet" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-calendar3 me-1"></i>Day sheet</a>
+        <a routerLink="/craftsman/notifications" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-bell me-1"></i>Notifications</a>
+        <a routerLink="/craftsman/profile" class="nav-link rounded-pill px-3 py-2"><i class="bi bi-person me-1"></i>Profile</a>
+      </nav>
+      <span class="user-pill rounded-pill px-3 py-2"><i class="bi bi-person-circle me-2"></i>Craftsman</span>
+    </div>
+  </header>
+
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="hero-card rounded-4 p-4 p-lg-5 mb-4">
+      <p class="eyebrow mb-2">Incoming work</p>
+      <h1 class="page-title mb-2">Service requests</h1>
+      <p class="text-muted mb-0">Review requests from customers and choose which work to take on.</p>
+    </section>
+
+    <div *ngIf="loading()" class="state loading" role="status">Loading requests...</div>
+    <div *ngIf="!loading() && errorMessage()" class="state error" role="alert">{{ errorMessage() }}</div>
+    <div *ngIf="!loading() && !errorMessage() && requests().length === 0" class="state empty">No service requests yet.</div>
+
+    <section *ngIf="!loading() && !errorMessage() && requests().length > 0" class="request-list">
+      <article *ngFor="let request of requests()" class="request-card rounded-4 p-4">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div><p class="eyebrow mb-1">Request #{{ request.id }}</p><h2 class="request-title mb-1">{{ request.customerName }}</h2><span class="text-muted">{{ request.craftName }}</span></div>
+          <span class="status-badge rounded-pill px-3 py-2" [class.pending]="request.status === 'Pending'" [class.accepted]="request.status === 'Accepted'" [class.declined]="request.status === 'Declined'">{{ request.status }}</span>
+        </div>
+        <div class="request-meta row g-3 mb-3"><div class="col-sm-4"><span class="meta-label">Needed on</span><strong>{{ request.neededOn | date:'mediumDate' }}</strong></div><div class="col-sm-4"><span class="meta-label">Offered price</span><strong>{{ request.price | number:'1.2-2' }}</strong></div></div>
+        <p class="description mb-4">{{ request.description }}</p>
+        <div *ngIf="request.status === 'Pending'" class="actions d-flex gap-2 flex-wrap"><button type="button" class="btn btn-primary" [disabled]="actionId() !== null" (click)="respond(request, 'accept')"><span *ngIf="actionId() !== request.id"><i class="bi bi-check2 me-1"></i>Accept</span><span *ngIf="actionId() === request.id">Responding...</span></button><button type="button" class="btn btn-outline-danger" [disabled]="actionId() !== null" (click)="respond(request, 'decline')"><i class="bi bi-x-lg me-1"></i>Decline</button></div>
+      </article>
+    </section>
+  </main>
+</div>
