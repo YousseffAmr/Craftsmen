@@ -20,6 +20,7 @@ import { CraftsmanProfileComponent } from './craftsman-profile.component';
 import { CustomerProfileComponent } from './customer-profile.component';
 import { CraftsmanNotificationsComponent } from './craftsman-notifications.component';
 import { CustomerNotificationsComponent } from './customer-notifications.component';
+import { CraftsmanStatusComponent } from './craftsman-status.component';
 
 export const appRoutes: Routes = [
   { path: '', component: LandingComponent, pathMatch: 'full' },
@@ -33,6 +34,7 @@ export const appRoutes: Routes = [
   { path: 'craftsman/day-sheet', component: CraftsmanDaySheetComponent, canActivate: [craftsmanGuard] },
   { path: 'craftsman/notifications', component: CraftsmanNotificationsComponent, canActivate: [craftsmanGuard] },
   { path: 'craftsman/profile', component: CraftsmanProfileComponent, canActivate: [craftsmanGuard] },
+  { path: 'craftsman/status', component: CraftsmanStatusComponent, canActivate: [craftsmanGuard] },
   { path: 'customer/craftsmen', component: CustomerCraftsmenComponent, canActivate: [customerGuard] },
   { path: 'customer/craftsmen/:id/request', component: CustomerRequestComponent, canActivate: [customerGuard] },
   { path: 'customer/notifications', component: CustomerNotificationsComponent, canActivate: [customerGuard] },

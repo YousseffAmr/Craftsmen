@@ -1,0 +1,22 @@
+<div class="profile-page">
+  <header class="topbar">
+    <div class="container app-shell d-flex align-items-center justify-content-between py-3">
+      <a routerLink="/craftsman/requests" class="brand d-flex align-items-center gap-2 text-decoration-none">
+        <span class="brand-badge d-inline-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-hammer"></i></span>
+        <span class="brand-name">CraftConnect</span>
+      </a>
+      <span class="user-pill rounded-pill px-3 py-2"><i class="bi bi-person-circle me-2"></i>Craftsman preview</span>
+    </div>
+  </header>
+
+  <main class="container app-shell py-4 py-lg-5">
+    <section class="profile-card rounded-4 p-4 p-lg-5">
+      <p class="eyebrow mb-2">Account status</p>
+      <h1 class="page-title mb-4">Craftsman status</h1>
+      <div class="state success" role="status">
+        <strong>{{ demoStatus.state }}</strong>
+        <p class="mb-0 mt-2">{{ demoStatus.message }}</p>
+      </div>
+    </section>
+  </main>
+</div>

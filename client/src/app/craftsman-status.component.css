@@ -1,0 +1,13 @@
+:host { display: block; }
+.profile-page { min-height: 100vh; background: var(--app-background); color: var(--app-text); }
+.topbar { background: var(--app-surface); border-bottom: 1px solid var(--app-border); }
+.app-shell { max-width: 1180px; margin: 0 auto; }
+.brand { color: var(--app-text); text-decoration: none; }
+.brand-badge { width: 34px; height: 34px; border-radius: 12px; background: var(--brand-amber); color: #14213d; }
+.brand-name { font-size: 1.05rem; font-weight: 800; letter-spacing: -.04em; }
+.user-pill { background: var(--app-surface-alt); border: 1px solid var(--app-border); }
+.profile-card { background: var(--app-surface); border: 1px solid var(--app-border); }
+.eyebrow { color: var(--brand-amber); text-transform: uppercase; letter-spacing: .14em; font-size: .68rem; font-weight: 800; }
+.page-title { font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.05em; }
+.state { border-radius: 1rem; padding: 1rem 1.15rem; border: 1px solid var(--app-border); background: rgba(16, 185, 129, 0.08); }
+.state strong { display: block; font-size: 1.1rem; }
