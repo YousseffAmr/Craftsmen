@@ -14,30 +14,77 @@ using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 var seedRequested = args.Contains("--seed", StringComparer.OrdinalIgnoreCase);
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
+var configuredCorsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ??
+    ["http://localhost:4200", "https://localhost:4200"];
+var environmentCorsOrigins = Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS");
+if (!string.IsNullOrWhiteSpace(environmentCorsOrigins))
+{
+    configuredCorsOrigins = environmentCorsOrigins
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+        .Concat(configuredCorsOrigins)
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .ToArray();
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularDev", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+        policy.WithOrigins(configuredCorsOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
 
+var configuredConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var configuredDatabasePath = builder.Configuration["Database:Path"] ?? Environment.GetEnvironmentVariable("DATABASE_PATH");
+var sqliteConnectionString = string.IsNullOrWhiteSpace(configuredConnectionString)
+    ? (!string.IsNullOrWhiteSpace(configuredDatabasePath)
+        ? $"Data Source={configuredDatabasePath}"
+        : "Data Source=crafts.db")
+    : configuredConnectionString;
+
+if (!string.IsNullOrWhiteSpace(configuredDatabasePath))
+{
+    var databaseDirectory = Path.GetDirectoryName(configuredDatabasePath);
+    if (!string.IsNullOrWhiteSpace(databaseDirectory))
+    {
+        Directory.CreateDirectory(databaseDirectory);
+    }
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=crafts.db");
+    options.UseSqlite(sqliteConnectionString);
 });
 
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? Environment.GetEnvironmentVariable("JWT_KEY")
+    ?? Environment.GetEnvironmentVariable("Jwt__Key");
 if (string.IsNullOrWhiteSpace(jwtKey))
 {
     throw new InvalidOperationException("Jwt:Key must be configured.");
 }
 
-var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "CraftConnect";
-var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "CraftConnect.Client";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? Environment.GetEnvironmentVariable("JWT_ISSUER")
+    ?? Environment.GetEnvironmentVariable("Jwt__Issuer")
+    ?? "CraftConnect";
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+    ?? Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+    ?? Environment.GetEnvironmentVariable("Jwt__Audience")
+    ?? "CraftConnect.Client";
 var jwtLifetimeMinutes = builder.Configuration.GetValue("Jwt:LifetimeMinutes", 60);
+if (int.TryParse(Environment.GetEnvironmentVariable("JWT_LIFETIME_MINUTES") ?? Environment.GetEnvironmentVariable("Jwt__LifetimeMinutes"), out var configuredLifetimeMinutes))
+{
+    jwtLifetimeMinutes = configuredLifetimeMinutes;
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -64,25 +111,28 @@ app.UseCors("AngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
 
-if (app.Environment.IsDevelopment() || seedRequested)
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction() || seedRequested)
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
 
-    const string adminEmail = "admin@craftconnect.local";
-    if (!await db.Users.AnyAsync(user => user.Email == adminEmail))
+    if (app.Environment.IsDevelopment() || seedRequested)
     {
-        var admin = new User
+        const string adminEmail = "admin@craftconnect.local";
+        if (!await db.Users.AnyAsync(user => user.Email == adminEmail))
         {
-            Name = "System Admin",
-            Email = adminEmail,
-            Role = UserRole.Admin
-        };
+            var admin = new User
+            {
+                Name = "System Admin",
+                Email = adminEmail,
+                Role = UserRole.Admin
+            };
 
-        admin.PasswordHash = new PasswordHasher<User>().HashPassword(admin, "Admin123!");
-        db.Users.Add(admin);
-        await db.SaveChangesAsync();
+            admin.PasswordHash = new PasswordHasher<User>().HashPassword(admin, "Admin123!");
+            db.Users.Add(admin);
+            await db.SaveChangesAsync();
+        }
     }
 
     if (seedRequested)
