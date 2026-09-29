@@ -1,10 +1,11 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { CustomerService, CustomerRequest } from './customer.service';
 
-@Component({ selector: 'app-customer-requests', standalone: true, imports: [CommonModule, RouterLink], styleUrl: './customer-requests.component.css', templateUrl: './customer-requests.component.html' })
+@Component({ selector: 'app-customer-requests', standalone: true, imports: [CommonModule, RouterLink, TranslatePipe], styleUrl: './customer-requests.component.css', templateUrl: './customer-requests.component.html' })
 export class CustomerRequestsComponent implements OnInit {
   requests = signal<CustomerRequest[]>([]); loading = signal(false); actionId = signal<number | null>(null); errorMessage = signal<string | null>(null);
   constructor(private readonly service: CustomerService) {}

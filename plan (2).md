@@ -399,7 +399,10 @@ enforce constraints the same way.
 
 ## 11. Stack
 
-- Angular + .NET API + EF Core + SQLite
+- Angular + .NET API + EF Core
+- Database: SQLite for local development, PostgreSQL (Supabase) for production.
+- Production schema applied via `db/postgres-schema.sql` in the Supabase SQL Editor.
+- Required environment variables: `ConnectionStrings__DefaultConnection`, `JWT_KEY`.
 - `AddCors` before `UseCors`
 - JWT auth, `[Authorize]` guarding writes
 - Passwords hashed (see §6a), never returned in any response

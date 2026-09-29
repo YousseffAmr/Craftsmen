@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -5,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { CraftsmanProfile, ProfileService } from './profile.service';
 
-@Component({ selector: 'app-craftsman-profile', standalone: true, imports: [CommonModule, FormsModule, RouterLink], styleUrl: './profile.component.css', templateUrl: './craftsman-profile.component.html' })
+@Component({ selector: 'app-craftsman-profile', standalone: true, imports: [CommonModule, FormsModule, RouterLink, TranslatePipe], styleUrl: './profile.component.css', templateUrl: './craftsman-profile.component.html' })
 export class CraftsmanProfileComponent implements OnInit {
   profile = signal<CraftsmanProfile | null>(null); loading = signal(false); saving = signal(false); errorMessage = signal<string | null>(null); successMessage = signal<string | null>(null);
   form = { name: '', contactInfo: '', dailyRate: 0 };

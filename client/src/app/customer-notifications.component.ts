@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -7,7 +8,7 @@ import { CustomerNotification, NotificationsService } from './notifications.serv
 @Component({
   selector: 'app-customer-notifications',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   styleUrl: './customer-notifications.component.css',
   templateUrl: './customer-notifications.component.html',
 })

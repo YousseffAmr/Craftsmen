@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { CraftsmanDaySheetService } from './craftsman-day-sheet.service';
 @Component({
   selector: 'app-craftsman-day-sheet',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
   styleUrl: './craftsman-day-sheet.component.css',
   templateUrl: './craftsman-day-sheet.component.html',
 })

@@ -94,7 +94,7 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
             entity.HasIndex(r => new { r.CraftsmanId, r.NeededOn })
                 .IsUnique()
-                .HasFilter("Status = 'Accepted'");
+                .HasFilter("\"Status\" = 'Accepted'");
         });
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Npgsql;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -42,27 +43,64 @@ builder.Services.AddCors(options =>
     });
 });
 
+var envConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 var configuredConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var configuredDatabasePath = builder.Configuration["Database:Path"] ?? Environment.GetEnvironmentVariable("DATABASE_PATH");
-var sqliteConnectionString = string.IsNullOrWhiteSpace(configuredConnectionString)
-    ? (!string.IsNullOrWhiteSpace(configuredDatabasePath)
-        ? $"Data Source={configuredDatabasePath}"
-        : "Data Source=crafts.db")
+var dbProvider = Environment.GetEnvironmentVariable("DB_PROVIDER") ?? Environment.GetEnvironmentVariable("DATABASE_PROVIDER");
+
+var rawConnectionString = !string.IsNullOrWhiteSpace(envConnectionString)
+    ? envConnectionString
     : configuredConnectionString;
 
-if (!string.IsNullOrWhiteSpace(configuredDatabasePath))
-{
-    var databaseDirectory = Path.GetDirectoryName(configuredDatabasePath);
-    if (!string.IsNullOrWhiteSpace(databaseDirectory))
-    {
-        Directory.CreateDirectory(databaseDirectory);
-    }
-}
+bool isPostgres = !string.IsNullOrWhiteSpace(envConnectionString)
+    || string.Equals(dbProvider, "postgresql", StringComparison.OrdinalIgnoreCase)
+    || string.Equals(dbProvider, "postgres", StringComparison.OrdinalIgnoreCase)
+    || (!string.IsNullOrWhiteSpace(rawConnectionString) &&
+        (rawConnectionString.StartsWith("Host=", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.StartsWith("Server=", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.Contains("Port=", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.Contains("User Id=", StringComparison.OrdinalIgnoreCase) ||
+         rawConnectionString.Contains("Username=", StringComparison.OrdinalIgnoreCase)));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+if (isPostgres)
 {
-    options.UseSqlite(sqliteConnectionString);
-});
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+    var postgresConnectionString = rawConnectionString;
+    if (string.IsNullOrWhiteSpace(postgresConnectionString))
+    {
+        throw new InvalidOperationException("PostgreSQL connection string must be configured via ConnectionStrings__DefaultConnection environment variable or ConnectionStrings:DefaultConnection configuration.");
+    }
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    {
+        options.UseNpgsql(postgresConnectionString);
+    });
+}
+else
+{
+    var sqliteConnectionString = string.IsNullOrWhiteSpace(rawConnectionString)
+        ? (!string.IsNullOrWhiteSpace(configuredDatabasePath)
+            ? $"Data Source={configuredDatabasePath}"
+            : "Data Source=crafts.db")
+        : rawConnectionString;
+
+    if (!string.IsNullOrWhiteSpace(configuredDatabasePath))
+    {
+        var databaseDirectory = Path.GetDirectoryName(configuredDatabasePath);
+        if (!string.IsNullOrWhiteSpace(databaseDirectory))
+        {
+            Directory.CreateDirectory(databaseDirectory);
+        }
+    }
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    {
+        options.UseSqlite(sqliteConnectionString);
+    });
+}
 
 var jwtKey = builder.Configuration["Jwt:Key"]
     ?? Environment.GetEnvironmentVariable("JWT_KEY")
@@ -115,7 +153,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() || seedReq
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
+    if (db.Database.ProviderName != "Npgsql.EntityFrameworkCore.PostgreSQL")
+    {
+        await db.Database.MigrateAsync();
+    }
 
     if (app.Environment.IsDevelopment() || seedRequested)
     {
@@ -496,7 +537,7 @@ app.MapPost("/craftsman/requests/{id:int}/accept", [Microsoft.AspNetCore.Authori
     {
         await db.SaveChangesAsync();
     }
-    catch (DbUpdateException exception) when (exception.InnerException is SqliteException { SqliteErrorCode: 19 })
+    catch (DbUpdateException exception) when (IsUniqueViolation(exception))
     {
         var winningRequestId = await db.Requests
             .AsNoTracking()
@@ -1350,6 +1391,16 @@ static async Task SeedDemoDataAsync(AppDbContext db)
             Status = RequestStatus.Pending
         });
     await db.SaveChangesAsync();
+}
+
+static bool IsUniqueViolation(DbUpdateException exception)
+{
+    return exception.InnerException switch
+    {
+        SqliteException sqliteEx => sqliteEx.SqliteErrorCode == 19,
+        PostgresException postgresEx => postgresEx.SqlState == "23505",
+        _ => false
+    };
 }
 
 static IResult ErrorResult(int statusCode, string message, string? fieldName = null)

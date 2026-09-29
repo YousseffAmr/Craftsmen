@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { AvailableCraftsman, CustomerService } from './customer.service';
 @Component({
   selector: 'app-customer-request',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
   styleUrl: './customer-request.component.css',
   templateUrl: './customer-request.component.html',
 })

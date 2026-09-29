@@ -62,6 +62,15 @@ CraftConnect is an Angular client with an ASP.NET Core and SQLite API for custom
 
 The Angular services call the API at `http://localhost:5128`. The two applications use separate ports because one TCP port cannot host both development servers.
 
+## Database & Production Deployment
+
+- **Local Development**: Uses **SQLite** (`api/crafts.db`). Migrations are managed via EF Core (`dotnet ef database update`).
+- **Production**: Uses **PostgreSQL (Supabase)**.
+  - The production schema is applied by executing [`db/postgres-schema.sql`](file:///d:/Crafts%20Project/db/postgres-schema.sql) in the Supabase SQL Editor.
+  - Required environment variables on production host:
+    - `ConnectionStrings__DefaultConnection`: PostgreSQL connection string (e.g. `Host=db.xxx.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=...`).
+    - `JWT_KEY`: Secret signing key for JWT tokens.
+
 ## Verification
 
 Run the Angular production build:

@@ -96,12 +96,41 @@ textarea {
   display: inline-block;
   width: .9rem;
   height: .9rem;
-  margin-right: .55rem;
+  margin-inline-end: .55rem;
   vertical-align: -.1rem;
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
   animation: craftconnect-spin .7s linear infinite;
+}
+
+html[dir='rtl'] .text-start {
+  text-align: right !important;
+}
+
+html[dir='rtl'] .text-end {
+  text-align: left !important;
+}
+
+html[dir='rtl'] .ms-1 { margin-left: 0 !important; margin-right: .25rem !important; }
+html[dir='rtl'] .ms-2 { margin-left: 0 !important; margin-right: .5rem !important; }
+html[dir='rtl'] .ms-3 { margin-left: 0 !important; margin-right: 1rem !important; }
+html[dir='rtl'] .ms-4 { margin-left: 0 !important; margin-right: 1.5rem !important; }
+html[dir='rtl'] .ms-5 { margin-left: 0 !important; margin-right: 3rem !important; }
+html[dir='rtl'] .ms-auto { margin-left: 0 !important; margin-right: auto !important; }
+html[dir='rtl'] .me-1 { margin-right: 0 !important; margin-left: .25rem !important; }
+html[dir='rtl'] .me-2 { margin-right: 0 !important; margin-left: .5rem !important; }
+html[dir='rtl'] .me-3 { margin-right: 0 !important; margin-left: 1rem !important; }
+html[dir='rtl'] .me-4 { margin-right: 0 !important; margin-left: 1.5rem !important; }
+html[dir='rtl'] .me-5 { margin-right: 0 !important; margin-left: 3rem !important; }
+html[dir='rtl'] .me-auto { margin-right: 0 !important; margin-left: auto !important; }
+
+html[dir='rtl'] input[type='email'],
+html[dir='rtl'] input[type='password'],
+html[dir='rtl'] input[type='number'],
+html[dir='rtl'] input[type='date'] {
+  direction: ltr;
+  text-align: left;
 }
 
 @keyframes craftconnect-spin {
@@ -249,5 +278,35 @@ textarea {
 :root[data-theme='dark'] .auth-panel,
 :root[data-theme='dark'] .auth-card {
   border-color: var(--app-border) !important;
+}
+
+html[lang='ar'] body {
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+}
+
+html[dir='rtl'] .landing-page { direction: rtl; }
+html[dir='rtl'] .landing-page .nav-links { margin-left: 0; margin-right: 22px; }
+html[dir='rtl'] .landing-page .nav-actions { direction: rtl; }
+html[dir='rtl'] .landing-page .eyebrow span { margin-right: 0; margin-left: 7px; }
+html[dir='rtl'] .landing-page .text-link i,
+html[dir='rtl'] .landing-page .path-card a i { margin-left: 0; margin-right: 5px; }
+html[dir='rtl'] .landing-page .avatar-stack span { margin-left: 0; margin-right: -7px; }
+html[dir='rtl'] .landing-page .avatar-stack span:first-child { margin-right: 0; }
+html[dir='rtl'] .landing-page .note-top { left: auto; right: -2px; }
+html[dir='rtl'] .landing-page .note-bottom { right: auto; left: -6px; }
+html[dir='rtl'] .landing-page .sun-disc { right: auto; left: 70px; }
+html[dir='rtl'] .landing-page .tool-one { right: auto; left: 26%; }
+html[dir='rtl'] .landing-page .tool-two { left: auto; right: 20%; }
+html[dir='rtl'] .landing-page .plant { right: auto; left: 11%; }
+html[dir='rtl'] .landing-page .workshop-art { inset: 25px 30px 20px 10px; }
+html[dir='rtl'] .landing-page .footer-copy { margin-left: 0; margin-right: auto; }
+html[dir='rtl'] .landing-page .bi-arrow-right,
+html[dir='rtl'] .landing-page .bi-arrow-up-right { transform: scaleX(-1); }
+
+@media (max-width: 767px) {
+  html[dir='rtl'] .landing-page .nav-actions { margin-left: 0; margin-right: auto; }
+  html[dir='rtl'] .landing-page .workshop-art { inset: 15px 10px 10px 25px; }
+  html[dir='rtl'] .landing-page .note-top { left: auto; right: 0; }
+  html[dir='rtl'] .landing-page .note-bottom { right: auto; left: 0; }
 }
 

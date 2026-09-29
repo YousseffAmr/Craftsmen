@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThemeService } from './theme.service';
+import { LanguageService } from './language.service';
 import { HelperComponent } from './helper.component';
 
 @Component({
@@ -10,8 +11,12 @@ import { HelperComponent } from './helper.component';
   template: '<router-outlet></router-outlet><app-helper></app-helper>',
 })
 export class App {
-  constructor(private readonly themeService: ThemeService) {
+  constructor(
+    private readonly themeService: ThemeService,
+    private readonly languageService: LanguageService,
+  ) {
     this.themeService.initialize();
+    this.languageService.initialize();
   }
 }
 

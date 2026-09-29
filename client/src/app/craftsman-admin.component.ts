@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -7,7 +8,7 @@ import { CraftsmanAdminService, PendingCraftsman } from './craftsman-admin.servi
 @Component({
   selector: 'app-craftsman-admin',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   styleUrl: './craftsman-admin.component.css',
   templateUrl: './craftsman-admin.component.html',
 })

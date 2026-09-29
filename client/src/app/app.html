@@ -1,55 +1,55 @@
 ﻿<div class="page-shell">
   <section class="panel form-panel">
-    <h1>Craft admin</h1>
+    <h1>{{ 'Craft admin' | translate }}</h1>
 
     <form (ngSubmit)="submitCraft()" novalidate>
       <div class="field-row">
-        <label for="craft-name">Name</label>
+        <label for="craft-name">{{ 'Name' | translate }}</label>
         <input id="craft-name" name="name" type="text" [(ngModel)]="form.name" />
       </div>
 
       <div class="field-row">
-        <label for="craft-description">Description</label>
+        <label for="craft-description">{{ 'Description' | translate }}</label>
         <textarea id="craft-description" name="description" rows="4" [(ngModel)]="form.description"></textarea>
       </div>
 
       <div class="actions-row">
         <button type="submit" [disabled]="saving">
-          {{ editingId === null ? 'Create craft' : 'Save changes' }}
+          {{ (editingId === null ? 'Create craft' : 'Save changes') | translate }}
         </button>
         <button type="button" class="secondary" *ngIf="editingId !== null" (click)="cancelEdit()">
-          Cancel
+          {{ 'Cancel' | translate }}
         </button>
       </div>
     </form>
 
-    <p class="form-error" *ngIf="formError">{{ formError }}</p>
+    <p class="form-error" *ngIf="formError">{{ formError | translate }}</p>
   </section>
 
   <section class="panel list-panel">
-    <h2>Existing crafts</h2>
+    <h2>{{ 'Existing crafts' | translate }}</h2>
 
-    <div *ngIf="loading()" class="state loading">Loading crafts…</div>
-    <div *ngIf="!loading() && errorMessage()" class="state error">{{ errorMessage() }}</div>
+    <div *ngIf="loading()" class="state loading">{{ 'Loading crafts…' | translate }}</div>
+    <div *ngIf="!loading() && errorMessage()" class="state error">{{ errorMessage() | translate }}</div>
     <div *ngIf="!loading() && !errorMessage() && crafts().length === 0" class="state empty">
-      No crafts yet. Add the first one above.
+      {{ 'No crafts yet. Add the first one above.' | translate }}
     </div>
 
     <ul *ngIf="!loading() && !errorMessage() && crafts().length > 0" class="craft-list">
       <li *ngFor="let craft of crafts()" class="craft-item">
         <div class="craft-details">
-          <strong>{{ craft.name }}</strong>
+          <strong dir="auto">{{ craft.name }}</strong>
           <span *ngIf="craft.description; else noDescription">
-            {{ craft.description }}
+            <span dir="auto">{{ craft.description }}</span>
           </span>
           <ng-template #noDescription>
-            <span class="muted">No description provided</span>
+            <span class="muted">{{ 'No description provided' | translate }}</span>
           </ng-template>
         </div>
 
         <div class="row-actions">
-          <button type="button" class="secondary" (click)="startEdit(craft)">Edit</button>
-          <button type="button" class="danger" (click)="deleteCraft(craft.id)">Delete</button>
+          <button type="button" class="secondary" (click)="startEdit(craft)">{{ 'Edit' | translate }}</button>
+          <button type="button" class="danger" (click)="deleteCraft(craft.id)">{{ 'Delete' | translate }}</button>
         </div>
       </li>
     </ul>

@@ -65,6 +65,56 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     }
 }
 
+public sealed class PostgresApiFactory : WebApplicationFactory<Program>
+{
+    private readonly string connectionString;
+
+    public PostgresApiFactory(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment("Testing");
+        builder.ConfigureAppConfiguration((_, configuration) =>
+        {
+            configuration.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:DefaultConnection"] = connectionString,
+                ["Jwt:Key"] = "test-signing-key-that-is-longer-than-32-characters",
+                ["Jwt:Issuer"] = "CraftConnect",
+                ["Jwt:Audience"] = "CraftConnect.Client"
+            });
+        });
+        builder.ConfigureServices(services =>
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            services.RemoveAll<DbContextOptions<AppDbContext>>();
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+        });
+    }
+
+    public async Task InitializeDatabaseAsync()
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.EnsureCreatedAsync();
+        if (!await db.Users.AnyAsync(user => user.Email == "admin@craftconnect.local"))
+        {
+            var admin = new User
+            {
+                Name = "Test Admin",
+                Email = "admin@craftconnect.local",
+                Role = UserRole.Admin
+            };
+            admin.PasswordHash = new PasswordHasher<User>().HashPassword(admin, "Admin123!");
+            db.Users.Add(admin);
+            await db.SaveChangesAsync();
+        }
+    }
+}
+
 public sealed record TestScenario(
     int CraftId,
     int CraftsmanId,
@@ -77,7 +127,7 @@ public sealed record TestScenario(
 
 public static class ApiTestHelpers
 {
-    public static async Task<TestScenario> CreateScenarioAsync(ApiFactory factory, bool approved = true, bool addSecondCraft = false)
+    public static async Task<TestScenario> CreateScenarioAsync(WebApplicationFactory<Program> factory, bool approved = true, bool addSecondCraft = false)
     {
         var suffix = Guid.NewGuid().ToString("N")[..10];
         const string password = "Password123!";
@@ -111,7 +161,7 @@ public static class ApiTestHelpers
         return document.RootElement.GetProperty("token").GetString()!;
     }
 
-    public static HttpClient AuthorizedClient(ApiFactory factory, string token)
+    public static HttpClient AuthorizedClient(WebApplicationFactory<Program> factory, string token)
     {
         var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

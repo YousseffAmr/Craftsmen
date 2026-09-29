@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -7,7 +8,7 @@ import { CraftsmanNotification, NotificationsService } from './notifications.ser
 @Component({
   selector: 'app-craftsman-notifications',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   styleUrl: './craftsman-notifications.component.css',
   templateUrl: './craftsman-notifications.component.html',
 })

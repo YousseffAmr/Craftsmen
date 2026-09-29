@@ -1,3 +1,4 @@
+import { TranslatePipe } from './translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -7,7 +8,7 @@ import { BoardGroup, CraftsmanBoardService } from './craftsman-board.service';
 @Component({
   selector: 'app-craftsman-board',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   styleUrl: './craftsman-board.component.css',
   templateUrl: './craftsman-board.component.html',
 })
