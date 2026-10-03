@@ -9,7 +9,7 @@ interface ApiError { message?: string; }
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private readonly apiUrl = 'http://localhost:5128';
+  private readonly apiUrl = 'https://craftsmen.fly.dev';
   constructor(private readonly http: HttpClient) {}
   getCraftsman(): Observable<CraftsmanProfile> { return this.http.get<CraftsmanProfile>(`${this.apiUrl}/craftsman/profile`).pipe(catchError(this.handleError)); }
   updateCraftsman(profile: Pick<CraftsmanProfile, 'name'|'contactInfo'|'dailyRate'>): Observable<CraftsmanProfile> { return this.http.put<CraftsmanProfile>(`${this.apiUrl}/craftsman/profile`, profile).pipe(catchError(this.handleError)); }

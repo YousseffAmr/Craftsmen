@@ -23,7 +23,7 @@ interface ApiErrorResponse {
 
 @Injectable({ providedIn: 'root' })
 export class CraftsmanBoardService {
-  private readonly apiUrl = 'http://localhost:5128';
+  private readonly apiUrl = 'https://craftsmen.fly.dev';
 
   constructor(private readonly http: HttpClient) {}
 
