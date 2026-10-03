@@ -43,7 +43,7 @@ interface ApiErrorResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:5128';
+  private readonly apiUrl = 'https://craftsmen.fly.dev';
   private readonly tokenKey = 'craftconnect_token';
 
   constructor(private readonly http: HttpClient) {}
