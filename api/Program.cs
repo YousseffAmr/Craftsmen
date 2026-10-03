@@ -142,9 +142,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Vercel", policy =>
+    {
+        policy.WithOrigins(
+                "https://craftsmen-dun.vercel.app",
+                "https://craftsmen-git-main-youss6.vercel.app",
+                "http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
-
+app.UseCors("Vercel");
 app.UseCors("AngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
